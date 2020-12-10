@@ -20,6 +20,7 @@ public class ProductRestServiceImpl {
     public ProductIdResponseRequest addProduct(ProductRequest request) {
         if (productMap == null) {
             productMap = new HashMap<>();
+            productMap.put("test", request);
         }
         String uuid = UUID.randomUUID().toString();
         productMap.put(uuid, request);
@@ -34,5 +35,4 @@ public class ProductRestServiceImpl {
         }
         throw new NotFoundException("Product " + request.getValue() + " not found");
     }
-
 }

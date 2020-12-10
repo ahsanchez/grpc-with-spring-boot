@@ -19,30 +19,25 @@ public class ProductGRPCServiceImpl extends ProductServiceGrpc.ProductServiceImp
 
     @Override
     public void addProduct(Product request, StreamObserver<ProductId> responseObserver) {
-        log.info("Add product {}", request);
         if (productMap == null) {
             productMap = new HashMap<>();
+            productMap.put("test", request);
         }
         String uuid = UUID.randomUUID().toString();
         productMap.put(uuid, request);
         ProductId id = ProductId.newBuilder().setValue(uuid).build();
         responseObserver.onNext(id);
         responseObserver.onCompleted();
-        log.info("Product added {}", productMap.get(uuid));
     }
 
     @Override
     public void getProduct(ProductId request, StreamObserver<Product> responseObserver) {
-        log.info("Get product {}", request.getValue());
         String id = request.getValue();
         if (productMap != null && productMap.containsKey(id)) {
             responseObserver.onNext(productMap.get(id));
             responseObserver.onCompleted();
-            log.info("Product={}", productMap.get(id));
         } else {
-            log.info("Product {} not found", request.getValue());
             responseObserver.onError(new StatusException(Status.NOT_FOUND));
         }
     }
-
 }
